@@ -24,8 +24,8 @@ public class Loot {
     @Column(name = "type")
     private LootType type;
 
-    @Column(name = "desc")
-    private String desc;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "price")
     private Long price;

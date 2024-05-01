@@ -28,11 +28,15 @@ public class User {
     @Column(name = "role")
     private UserRole role;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "userId", cascade = CascadeType.ALL)
     private List<Loot> userLoots;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Order> userOrders;
+    @OneToMany(mappedBy = "buyerId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Order> purchases;
+
+    // Orders where the user is the seller
+    @OneToMany(mappedBy = "sellerId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Order> sales;
 
     @Column(name = "regDate")
     private LocalDate regDate;
