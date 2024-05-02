@@ -18,6 +18,9 @@ public class User {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "discordId")
+    private String discordId;
+
     @Column(name = "username", nullable = false)
     private String username;
 
@@ -49,6 +52,9 @@ public class User {
 
     @Column(name = "balance")
     private Long balance;
+
+    @Column(name = "avatar")
+    private String avatar;
 
     @Column(name = "isBanned")
     private boolean active;
