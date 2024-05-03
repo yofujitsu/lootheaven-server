@@ -2,6 +2,7 @@ package com.yofujitsu.lootheavenserver.controllers;
 
 
 import com.yofujitsu.lootheavenserver.dao.entities.Loot;
+import com.yofujitsu.lootheavenserver.dao.entities.dto.LootDTO;
 import com.yofujitsu.lootheavenserver.dao.repositories.LootRepository;
 import com.yofujitsu.lootheavenserver.services.LootService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,40 +22,49 @@ public class LootController {
     private LootRepository lootRepository;
 
     @PostMapping("/add")
-    public ResponseEntity<Loot> createLoot(@RequestBody Loot loot) {
+    public ResponseEntity<LootDTO> createLoot(@RequestBody LootDTO lootDTO) {
         try {
-            Loot savedLoot = lootService.createLoot(loot);
-            return new ResponseEntity<>(savedLoot, HttpStatus.CREATED);
+            LootDTO createdLoot = lootService.createLoot(lootDTO);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<Loot>> getAllLoots() {
-        List<Loot> loots = lootService.findAllLoots();
+    public ResponseEntity<List<LootDTO>> getAllLoots() {
+        List<LootDTO> loots = lootService.findAllLoots();
         return loots.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(loots);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Loot>> getLootsByUserId(@PathVariable Long userId) {
-        List<Loot> loots = lootService.findLootsByUserId(userId);
+    public ResponseEntity<List<LootDTO>> getLootsByUserId(@PathVariable Long userId) {
+        List<LootDTO> loots = lootService.findLootsByUserId(userId);
         return loots.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(loots);
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<Loot>> getLootsForCurrentUser() {
-        List<Loot> loots = lootService.findLootsForCurrentUser();
+    public ResponseEntity<List<LootDTO>> getLootsForCurrentUser() {
+        List<LootDTO> loots = lootService.findLootsForCurrentUser();
         return loots.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(loots);
     }
 
     @DeleteMapping("/del/{lootId}")
     public ResponseEntity<Void> deleteLoot(@PathVariable Long lootId) {
-        boolean isDeleted = lootService.deleteLootIfOwned(lootId);
-        if (isDeleted) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+        lootService.deleteLoot(lootId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/update/{lootId}")
+    public ResponseEntity<Loot> updateLoot(@PathVariable Long lootId, @RequestBody Loot loot) {
+        Loot updatedLoot = lootService.updateLoot(lootId, loot);
+        return ResponseEntity.ok(updatedLoot);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteAllLoots() throws Exception {
+        lootService.deleteAllLoots();
+        return ResponseEntity.ok().build();
     }
 
 }

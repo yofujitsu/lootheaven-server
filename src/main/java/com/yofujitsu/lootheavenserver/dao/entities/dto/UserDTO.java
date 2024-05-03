@@ -1,6 +1,22 @@
 package com.yofujitsu.lootheavenserver.dao.entities.dto;
 
-import com.yofujitsu.lootheavenserver.dao.entities.enums.UserRole;
+import jakarta.persistence.Entity;
+import lombok.*;
 
-public record UserDTO(String email, String username, String message) {
+import java.time.LocalDate;
+
+
+@Data
+public class UserDTO {
+    private Long id;
+    private String discordId;
+    private String username;
+    private String email;
+    private String role;
+    private LocalDate regDate;
+    private Long dealsCount;
+    private Long ordersCount;
+    private Long balance;
+    private String avatar;
+    private boolean active;
 }

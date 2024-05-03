@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "loots")
 public class Loot {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -34,12 +34,16 @@ public class Loot {
     private String status;
 
     @Column(name = "productName")
-    private String productName; //game or service (spotify etc..)
+    private String productName;
 
-    @Column(name = "userId")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "creatorId")
+    private User creator;
 
     @Column(name = "published")
     private LocalDateTime published;
+
+    @Column(name = "contentUrl", nullable = true)
+    private String contentUrl;
 
 }

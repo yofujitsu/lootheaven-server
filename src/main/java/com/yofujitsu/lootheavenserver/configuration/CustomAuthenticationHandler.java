@@ -47,6 +47,7 @@ public class CustomAuthenticationHandler extends SimpleUrlAuthenticationSuccessH
         if (newUser == null) {
             newUser = new User();
             newUser.setEmail(email);
+            newUser.setActive(true);
         };
 
         newUser.setUsername(username);
@@ -56,7 +57,6 @@ public class CustomAuthenticationHandler extends SimpleUrlAuthenticationSuccessH
         newUser.setDealsCount(0L);
         newUser.setOrdersCount(0L);
         newUser.setRole(USER);
-        newUser.setActive(true);
         newUser.setRegDate(LocalDate.now());
         userRepository.save(newUser);
 

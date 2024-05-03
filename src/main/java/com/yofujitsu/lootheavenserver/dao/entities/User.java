@@ -14,11 +14,11 @@ import java.util.List;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "discordId")
+    @Column(name = "discordId", unique = true, nullable = false)
     private String discordId;
 
     @Column(name = "username", nullable = false)
@@ -31,14 +31,13 @@ public class User {
     @Column(name = "role")
     private UserRole role;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "userId", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "creator", cascade = CascadeType.ALL)
     private List<Loot> userLoots;
 
-    @OneToMany(mappedBy = "buyerId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> purchases;
 
-    // Orders where the user is the seller
-    @OneToMany(mappedBy = "sellerId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> sales;
 
     @Column(name = "regDate")
@@ -56,6 +55,6 @@ public class User {
     @Column(name = "avatar")
     private String avatar;
 
-    @Column(name = "isBanned")
+    @Column(name = "isActive", nullable = true)
     private boolean active;
 }

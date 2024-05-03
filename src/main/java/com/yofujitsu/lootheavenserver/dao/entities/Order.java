@@ -10,15 +10,17 @@ import java.time.LocalDateTime;
 @Table(name = "orders")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "buyerId")
-    private Long buyerId;
+    @ManyToOne
+    @JoinColumn(name = "buyerId")
+    private User buyer;
 
-    @Column(name = "sellerId")
-    private Long sellerId;
+    @ManyToOne
+    @JoinColumn(name = "sellerId")
+    private User seller;
 
     @Column(name = "orderDate")
     private LocalDateTime orderDate;
@@ -26,8 +28,9 @@ public class Order {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "lootId")
-    private Long lootId;
+    @ManyToOne
+    @JoinColumn(name = "lootId", referencedColumnName = "id")
+    private Loot loot;
 
     @Column(name = "transactionCost")
     private Long cost;
