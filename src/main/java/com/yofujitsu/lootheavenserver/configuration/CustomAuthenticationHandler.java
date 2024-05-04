@@ -28,7 +28,7 @@ public class CustomAuthenticationHandler extends SimpleUrlAuthenticationSuccessH
 
     public CustomAuthenticationHandler() {
         super();  // Initialize with no default redirect path
-        setDefaultTargetUrl("/users/me");  // Ensure this is set if the URL is null
+        setDefaultTargetUrl("http://localhost:5173/profile");  // Ensure this is set if the URL is null
         setAlwaysUseDefaultTargetUrl(true);
     }
 
@@ -48,16 +48,17 @@ public class CustomAuthenticationHandler extends SimpleUrlAuthenticationSuccessH
             newUser = new User();
             newUser.setEmail(email);
             newUser.setActive(true);
+            newUser.setBalance(0L);
+            newUser.setDealsCount(0L);
+            newUser.setOrdersCount(0L);
+            newUser.setRole(USER);
+            newUser.setDiscordId(userId);
+            newUser.setRegDate(LocalDate.now());
+            newUser.setUsername(username);
+            newUser.setAvatar(avatarUrl);
         };
 
-        newUser.setUsername(username);
-        newUser.setAvatar(avatarUrl);
-        newUser.setDiscordId(userId);
-        newUser.setBalance(0L);
-        newUser.setDealsCount(0L);
-        newUser.setOrdersCount(0L);
-        newUser.setRole(USER);
-        newUser.setRegDate(LocalDate.now());
+
         userRepository.save(newUser);
 
         super.onAuthenticationSuccess(request, response, authentication);
