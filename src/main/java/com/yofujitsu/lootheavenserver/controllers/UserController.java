@@ -1,13 +1,10 @@
 package com.yofujitsu.lootheavenserver.controllers;
 
-import com.yofujitsu.lootheavenserver.dao.entities.User;
-import com.yofujitsu.lootheavenserver.dao.repositories.UserRepository;
+import com.yofujitsu.lootheavenserver.dao.entities.dto.UserDTO;
 import com.yofujitsu.lootheavenserver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -15,33 +12,33 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserRepository userRepository;
 
     @GetMapping("/me")
-    public User getMyInfo() {
-        return userService.getCurrentUser();
+    public ResponseEntity<UserDTO> getMyInfo() {
+        UserDTO userDTO = userService.getCurrentUserDTO();
+        return ResponseEntity.ok(userDTO);
     }
 
     @GetMapping("/{userId}")
-    public Optional<User> getUserInfo(@PathVariable Long userId) {
-        return userRepository.findById(userId);
+    public ResponseEntity<UserDTO> getUserInfo(@PathVariable Long userId) {
+        UserDTO userDTO = userService.getUserDTOById(userId);
+        return ResponseEntity.ok(userDTO);
     }
 
     @PatchMapping("/edit/me")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        User updatedUser = userService.updateCurrUser(user);
-        return ResponseEntity.ok(updatedUser);
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) {
+        UserDTO updatedUserDTO = userService.updateCurrUser(userDTO);
+        return ResponseEntity.ok(updatedUserDTO);
     }
 
     @PatchMapping("/balance")
-    public ResponseEntity<User> updateBalance(Long amount) {
+    public ResponseEntity<UserDTO> updateBalance(@RequestParam Long amount) {
         try {
-            User updatedUser = userService.updateBalance(amount);
-            return ResponseEntity.ok(updatedUser);
+            UserDTO updatedUserDTO = userService.updateBalance(amount);
+            return ResponseEntity.ok(updatedUserDTO);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
         }
     }
-
 }
+

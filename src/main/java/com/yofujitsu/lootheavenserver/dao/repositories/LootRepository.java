@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface LootRepository extends JpaRepository<Loot, Long> {
-    List<Loot> findByCreatorId(Long discordId);
+    List<Loot> findByCreatorId(Long creatorId);
 }

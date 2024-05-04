@@ -1,9 +1,7 @@
 package com.yofujitsu.lootheavenserver.controllers;
 
-
 import com.yofujitsu.lootheavenserver.dao.entities.Loot;
 import com.yofujitsu.lootheavenserver.dao.entities.dto.LootDTO;
-import com.yofujitsu.lootheavenserver.dao.repositories.LootRepository;
 import com.yofujitsu.lootheavenserver.services.LootService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,15 +16,14 @@ public class LootController {
 
     @Autowired
     private LootService lootService;
-    @Autowired
-    private LootRepository lootRepository;
 
     @PostMapping("/add")
     public ResponseEntity<LootDTO> createLoot(@RequestBody LootDTO lootDTO) {
         try {
             LootDTO createdLoot = lootService.createLoot(lootDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdLoot);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -51,20 +48,32 @@ public class LootController {
 
     @DeleteMapping("/del/{lootId}")
     public ResponseEntity<Void> deleteLoot(@PathVariable Long lootId) {
-        lootService.deleteLoot(lootId);
-        return ResponseEntity.ok().build();
+        try {
+            lootService.deleteLoot(lootId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PatchMapping("/update/{lootId}")
-    public ResponseEntity<Loot> updateLoot(@PathVariable Long lootId, @RequestBody Loot loot) {
-        Loot updatedLoot = lootService.updateLoot(lootId, loot);
-        return ResponseEntity.ok(updatedLoot);
+    public ResponseEntity<Loot> updateLoot(@PathVariable Long lootId, @RequestBody LootDTO lootDTO) {
+        try {
+            Loot updatedLoot = lootService.updateLoot(lootId, lootDTO);
+            return ResponseEntity.ok(updatedLoot);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteAllLoots() throws Exception {
-        lootService.deleteAllLoots();
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> deleteAllLoots() {
+        try {
+            lootService.deleteAllLoots();
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
-
 }
+

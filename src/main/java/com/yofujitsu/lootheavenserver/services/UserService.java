@@ -1,6 +1,9 @@
 package com.yofujitsu.lootheavenserver.services;
 
+import com.yofujitsu.lootheavenserver.Mappers.UserMapper;
 import com.yofujitsu.lootheavenserver.dao.entities.User;
+import com.yofujitsu.lootheavenserver.dao.entities.dto.UserDTO;
+import com.yofujitsu.lootheavenserver.dao.entities.enums.UserRole;
 import com.yofujitsu.lootheavenserver.dao.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,36 +15,50 @@ import org.webjars.NotFoundException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserMapper userMapper;
 
-    public User updateCurrUser(User updateData) {
-        User user = getCurrentUser();
-        user.setUsername(updateData.getUsername() != null ? updateData.getUsername() : user.getUsername());
-        user.setAvatar(updateData.getAvatar() != null ? updateData.getAvatar() : user.getAvatar());
-        return userRepository.save(user);
+    public UserDTO updateCurrUser(UserDTO updateData) {
+        User currentUser = getCurrentUser();
+        currentUser.setUsername(updateData.getUsername() != null ? updateData.getUsername() : currentUser.getUsername());
+        currentUser.setAvatar(updateData.getAvatar() != null ? updateData.getAvatar() : currentUser.getAvatar());
+        userRepository.save(currentUser);
+        return userMapper.userToUserDTO(currentUser);
     }
 
-    public User banUser(Long userId) {
+    public UserDTO getUserDTOById(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        return userMapper.userToUserDTO(user);
+    }
+
+    public UserDTO banUser(Long userId) {
+        User currUser = getCurrentUser();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
-        user.setActive(!user.isActive());
-        user.setBalance(0L);
-        return userRepository.save(user);
+        if (currUser.getRole().equals(UserRole.ADMIN)) {
+            user.setActive(!user.isActive());
+            user.setBalance(0L);
+        }
+        userRepository.save(user);
+        return userMapper.userToUserDTO(user);
     }
 
     @Transactional
-    public User updateBalance(Long amountToAdd) {
-        User user = getCurrentUser();
+    public UserDTO updateBalance(Long amountToAdd) {
+        User currentUser = getCurrentUser();
         if (amountToAdd < 0) {
             throw new IllegalArgumentException("Amount to add must be non-negative");
         }
-        user.setBalance(user.getBalance() + amountToAdd);
-        return userRepository.save(user);
+        currentUser.setBalance(currentUser.getBalance() + amountToAdd);
+        userRepository.save(currentUser);
+        return userMapper.userToUserDTO(currentUser);
     }
 
     public User getCurrentUser() {
@@ -52,7 +69,14 @@ public class UserService {
         return userRepository.findByDiscordId(discordId);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public UserDTO getCurrentUserDTO() {
+        User user = getCurrentUser(); // Assume this fetches the current authenticated user
+        return userMapper.userToUserDTO(user);
+    }
+
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(userMapper::userToUserDTO)
+                .collect(Collectors.toList());
     }
 }
