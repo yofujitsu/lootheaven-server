@@ -67,11 +67,18 @@ public class UserService {
 
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        System.out.println("Principal type: " + principal.getClass().getName());
+        if (authentication == null || !(authentication.getPrincipal() instanceof DefaultOAuth2User)) {
+            throw new IllegalStateException("Current user is not authenticated with OAuth2");
+        }
+
         DefaultOAuth2User oidcUser = (DefaultOAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oidcUser.getAttributes();
         String discordId = (String) attributes.get("id");
         return userRepository.findByDiscordId(discordId);
     }
+
 
     public UserDTO getCurrentUserDTO() {
         User user = getCurrentUser(); // Assume this fetches the current authenticated user

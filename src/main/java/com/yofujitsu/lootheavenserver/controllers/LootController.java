@@ -35,8 +35,8 @@ public class LootController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<LootDTO>> getLootsByUserId(@PathVariable Long userId) {
-        List<LootDTO> loots = lootService.findLootsByUserId(userId);
+    public ResponseEntity<List<LootDTO>> getLootsByUserId(@PathVariable String userId) {
+        List<LootDTO> loots = lootService.findLootsByUserId(Long.parseLong(userId));
         return loots.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(loots);
     }
 
@@ -47,9 +47,9 @@ public class LootController {
     }
 
     @DeleteMapping("/del/{lootId}")
-    public ResponseEntity<Void> deleteLoot(@PathVariable Long lootId) {
+    public ResponseEntity<Void> deleteLoot(@PathVariable String lootId) {
         try {
-            lootService.deleteLoot(lootId);
+            lootService.deleteLoot(Long.parseLong(lootId));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -57,9 +57,9 @@ public class LootController {
     }
 
     @PatchMapping("/update/{lootId}")
-    public ResponseEntity<Loot> updateLoot(@PathVariable Long lootId, @RequestBody LootDTO lootDTO) {
+    public ResponseEntity<Loot> updateLoot(@PathVariable String lootId, @RequestBody LootDTO lootDTO) {
         try {
-            Loot updatedLoot = lootService.updateLoot(lootId, lootDTO);
+            Loot updatedLoot = lootService.updateLoot(Long.parseLong(lootId), lootDTO);
             return ResponseEntity.ok(updatedLoot);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

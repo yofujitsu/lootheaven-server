@@ -27,8 +27,8 @@ public class LootMapper {
 
     public static Loot lootDTOToLoot(LootDTO dto) {
         Loot loot = new Loot();
-        // This method typically won't set the creator directly as it's done within the service layer
         loot.setName(dto.getName());
+        loot.setType(dto.getType());
         loot.setDescription(dto.getDescription());
         loot.setPrice(dto.getPrice());
         loot.setStatus(dto.getStatus());

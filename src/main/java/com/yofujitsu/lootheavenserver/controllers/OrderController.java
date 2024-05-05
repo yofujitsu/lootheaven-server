@@ -13,8 +13,8 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/{lootId}")
-    public ResponseEntity<String> purchaseLoot(@PathVariable Long lootId) {
-        String content = orderService.purchaseLoot(lootId);
+    public ResponseEntity<String> purchaseLoot(@PathVariable String lootId) {
+        String content = orderService.purchaseLoot(Long.parseLong(lootId));
         return ResponseEntity.ok(content);
     }
 }

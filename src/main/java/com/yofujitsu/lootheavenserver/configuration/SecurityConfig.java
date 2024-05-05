@@ -39,7 +39,6 @@ public class SecurityConfig {
                 )
                 .oauth2Login(
                     oauth2Login -> oauth2Login
-//                            .loginPage("/auth/login")
                             .successHandler(customAuthenticationHandler)
                 );
 

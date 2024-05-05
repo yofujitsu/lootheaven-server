@@ -19,8 +19,8 @@ public class AdminController {
 
     @PostMapping("/{userId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<UserDTO> banUser(@PathVariable Long userId) {
-        UserDTO user = userService.banUser(userId);
+    public ResponseEntity<UserDTO> banUser(@PathVariable String userId) {
+        UserDTO user = userService.banUser(Long.parseLong(userId));
         return ResponseEntity.ok(user);
     }
 }
