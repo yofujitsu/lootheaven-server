@@ -4,9 +4,11 @@ import com.yofujitsu.lootheavenserver.Mappers.LootMapper;
 import com.yofujitsu.lootheavenserver.dao.entities.Loot;
 import com.yofujitsu.lootheavenserver.dao.entities.User;
 import com.yofujitsu.lootheavenserver.dao.entities.dto.LootDTO;
+import com.yofujitsu.lootheavenserver.dao.entities.dto.UserDTO;
 import com.yofujitsu.lootheavenserver.dao.entities.enums.UserRole;
 import com.yofujitsu.lootheavenserver.dao.repositories.LootRepository;
 import com.yofujitsu.lootheavenserver.dao.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,8 +41,9 @@ public class LootService {
         loot.setCreator(userRepository.findById(lootDTO.getCreatorId())
                 .orElseThrow(() -> new RuntimeException("User not found")));
         loot = lootRepository.save(loot);
-        return LootMapper.lootToLootDTO(loot);
+        return lootMapper.lootToLootDTO(loot);
     }
+
 
     public void deleteLoot(Long id) {
         if (LootIfOwned(id)) {
@@ -68,13 +71,18 @@ public class LootService {
 
     public List<LootDTO> findAllLoots() {
         return lootRepository.findAll().stream()
-                .map(LootMapper::lootToLootDTO)
+                .map(lootMapper::lootToLootDTO)
                 .collect(Collectors.toList());
+    }
+
+    public LootDTO findLootById(Long lootId) {
+        Optional<Loot> loot = lootRepository.findById(lootId);
+        return loot.map(lootMapper::lootToLootDTO).orElseThrow(() -> new EntityNotFoundException("Loot not found with id: " + lootId));
     }
 
     public List<LootDTO> findLootsByUserId(Long discordId) {
         return lootRepository.findByCreatorId(discordId).stream()
-                .map(LootMapper::lootToLootDTO)
+                .map(lootMapper::lootToLootDTO)
                 .collect(Collectors.toList());
     }
 
@@ -82,7 +90,7 @@ public class LootService {
         User currUser = userService.getCurrentUser();
         Long userId = currUser.getId();
         return lootRepository.findByCreatorId(userId).stream()
-                .map(LootMapper::lootToLootDTO)
+                .map(lootMapper::lootToLootDTO)
                 .collect(Collectors.toList());
     }
 

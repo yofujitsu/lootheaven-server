@@ -47,7 +47,19 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
         if (currUser.getRole().equals(UserRole.ADMIN)) {
-            user.setActive(!user.isActive());
+            user.setActive(false);
+            user.setBalance(0L);
+        }
+        userRepository.save(user);
+        return userMapper.userToUserDTO(user);
+    }
+
+    public UserDTO unbanUser(Long userId) {
+        User currUser = getCurrentUser();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+        if (currUser.getRole().equals(UserRole.ADMIN)) {
+            user.setActive(true);
             user.setBalance(0L);
         }
         userRepository.save(user);

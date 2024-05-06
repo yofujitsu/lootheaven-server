@@ -46,6 +46,12 @@ public class LootController {
         return loots.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(loots);
     }
 
+    @GetMapping("/info/{lootId}")
+    public ResponseEntity<LootDTO> getLootById(@PathVariable String lootId) {
+        LootDTO lootDTO = lootService.findLootById(Long.parseLong(lootId));
+        return ResponseEntity.ok(lootDTO);
+    }
+
     @DeleteMapping("/del/{lootId}")
     public ResponseEntity<Void> deleteLoot(@PathVariable String lootId) {
         try {

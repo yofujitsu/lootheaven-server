@@ -17,10 +17,15 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/{userId}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/ban/{userId}")
     public ResponseEntity<UserDTO> banUser(@PathVariable String userId) {
         UserDTO user = userService.banUser(Long.parseLong(userId));
+        return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/unban/{userId}")
+    public ResponseEntity<UserDTO> unbanUser(@PathVariable String userId) {
+        UserDTO user = userService.unbanUser(Long.parseLong(userId));
         return ResponseEntity.ok(user);
     }
 }

@@ -2,6 +2,7 @@ package com.yofujitsu.lootheavenserver.Mappers;
 
 import com.yofujitsu.lootheavenserver.dao.entities.Loot;
 import com.yofujitsu.lootheavenserver.dao.entities.dto.LootDTO;
+import com.yofujitsu.lootheavenserver.dao.entities.enums.LootType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -10,11 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class LootMapper {
 
-    public static LootDTO lootToLootDTO(Loot loot) {
+    public LootDTO lootToLootDTO(Loot loot) {
         LootDTO dto = new LootDTO();
         dto.setId(loot.getId());
         dto.setName(loot.getName());
-        dto.setType(loot.getType());
+        dto.setType(String.valueOf(loot.getType()));
         dto.setDescription(loot.getDescription());
         dto.setPrice(loot.getPrice());
         dto.setStatus(loot.getStatus());
@@ -28,7 +29,7 @@ public class LootMapper {
     public static Loot lootDTOToLoot(LootDTO dto) {
         Loot loot = new Loot();
         loot.setName(dto.getName());
-        loot.setType(dto.getType());
+        loot.setType(LootType.valueOf(dto.getType()));
         loot.setDescription(dto.getDescription());
         loot.setPrice(dto.getPrice());
         loot.setStatus(dto.getStatus());

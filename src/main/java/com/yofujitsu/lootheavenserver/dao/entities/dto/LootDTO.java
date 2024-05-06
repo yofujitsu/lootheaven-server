@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class LootDTO {
     private Long id;
     private String name;
-    private LootType type;
+    private String type;
     private String description;
     private Long price;
     private String status;
