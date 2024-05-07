@@ -5,17 +5,18 @@ services:
     ports:
       - "8082:8082"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/lootheaven?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3308/lootheaven?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=secret
+      - BASE_URL=http://79.174.82.223:8082
     depends_on:
       - db
 
   db:
     image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
+    command: --default-authentication-plugin=caching_sha2_password --port=3308
     ports:
-      - "3306:3306"
+      - "3308:3308"
     environment:
       - MYSQL_DATABASE=lootheaven
       - MYSQL_USER=user
@@ -23,7 +24,7 @@ services:
       - MYSQL_ROOT_PASSWORD=secret
     volumes:
       - db-data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+#      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   db-data:
