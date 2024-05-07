@@ -42,7 +42,7 @@ public class OrderService {
         User buyer = userService.getCurrentUser();
         Loot loot = lootRepository.findById(lootId).orElseThrow(RuntimeException::new);
         User seller = userRepository.findByDiscordId(loot.getCreator().getDiscordId());
-        if(!Objects.equals(buyer.getId(), seller.getId())) {
+        if(!Objects.equals(buyer.getId(), seller.getId()) && seller.isActive()) {
             if (buyer.getBalance() >= loot.getPrice()) {
                 buyer.setBalance(buyer.getBalance() - loot.getPrice());
                 seller.setBalance(seller.getBalance() + loot.getPrice());
@@ -65,6 +65,8 @@ public class OrderService {
             } else {
                 throw new RuntimeException("Insufficient funds");
             }
+        } else {
+            throw new RuntimeException("Вы не можете купить товар у себя)");
         }
         return loot.getContentUrl();
     }

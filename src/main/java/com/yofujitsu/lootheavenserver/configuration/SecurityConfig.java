@@ -33,9 +33,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/**").permitAll()
-                        .anyRequest().authenticated()
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests.
+                        requestMatchers("/").permitAll()
+                                .requestMatchers("/login").permitAll()
+                                .requestMatchers("/loots/**").permitAll()
+                                .requestMatchers("/users/**").permitAll()
+                                .requestMatchers("/admin/**").permitAll()
+                                .requestMatchers("/purchase/**").permitAll()
+                                .requestMatchers("/auth/status").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .oauth2Login(
                     oauth2Login -> oauth2Login

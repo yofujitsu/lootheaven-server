@@ -44,13 +44,18 @@ public class UserService {
 
     public UserDTO banUser(Long userId) {
         User currUser = getCurrentUser();
+        System.out.println("Curr user claimed");
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+        System.out.println("Banning user claimed");
         if (currUser.getRole().equals(UserRole.ADMIN)) {
+            System.out.println("If statement done");
             user.setActive(false);
             user.setBalance(0L);
         }
         userRepository.save(user);
+        System.out.println("saved into repo");
+
         return userMapper.userToUserDTO(user);
     }
 
