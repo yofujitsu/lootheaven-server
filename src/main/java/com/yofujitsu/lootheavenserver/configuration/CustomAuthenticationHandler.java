@@ -28,7 +28,7 @@ public class CustomAuthenticationHandler extends SimpleUrlAuthenticationSuccessH
 
     public CustomAuthenticationHandler() {
         super();  // Initialize with no default redirect path
-        setDefaultTargetUrl("http://localhost:5173/home");  // Ensure this is set if the URL is null
+        setDefaultTargetUrl("http://213.139.208.110:5173/home");  // Ensure this is set if the URL is null
         setAlwaysUseDefaultTargetUrl(true);
     }
 
