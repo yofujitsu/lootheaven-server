@@ -61,10 +61,14 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://213.139.208.110:5173"));
+        configuration.setAllowedOrigins(Arrays.asList("http://147.45.246.193:5173")); // Точно указываем домен, с которого разрешен доступ
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PATCH", "HEAD", "OPTIONS"));
         configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(List.of("Content-Type", "X-Requested-With", "Authorization", "Accept", "Origin"));
+        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "X-Requested-With", "Authorization", "Accept", "Origin"));
+
+        // Эта настройка добавляет нужные заголовки в ответ сервера, позволяя браузеру процессить ответ.
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Length", "X-Total-Count"));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
